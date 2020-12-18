@@ -5,9 +5,29 @@ const sendResponse = require("../helpers/sendResponse");
 const path = require("path");
 
 const getAllBlogs = async (req, res, next)=>{
-    try{
-        let blogs = await Blog.find();
-        sendResponse(200, "Successful", blogs, req, res);     
+    try{ 
+        let queryArray = ["id", "title"];
+        let queryFilter = {};
+        let flag ;
+        if(Object.keys(req.query).length !== 0){
+            Object.keys(req.query).forEach((key)=>{
+                if(queryArray.includes(key)){
+                    queryFilter[key] = req.query[key];
+                    flag = true;
+                }
+            })
+            if(flag){
+                const blogs = await Blog.find(queryFilter);
+                sendResponse(200, "Successful", blogs, req, res);
+            }
+            else{
+                sendResponse(200, "Successful", [], req, res);
+            }
+        }
+        else{
+            let blogs = await Blog.find();
+            sendResponse(200, "Successful", blogs, req, res);
+        }        
     }catch(err){
         console.log(err);
         return sendError(new AppError(400, "Unsuccessful", "Internal Error"), req, res);
