@@ -45,22 +45,28 @@ const getBlogById = async (req, res, next)=>{
 }
 
 const createBlog = async (req, res, next)=>{
-    let pathName = path.join(__dirname,"..",req.file.path);
-    let relatedLinks = req.body.links.split(",");
-    let newBlog = new Blog({
-        title: req.body.title,
-        content: req.body.content,
-        links: relatedLinks,
-        image: pathName,
-    })
-    try{
-        const blog = await newBlog.save();
-        sendResponse(200, "Successful", blog, req, res);
-
-    }catch(err){
-        console.log(err);
-        return sendError(new AppError(400, "Unsuccessful", "Internal Error"), req, res);
+    if(req.file){
+        let pathName = path.join(__dirname,"..",req.file.path);
+        let relatedLinks = req.body.links.split(",");
+        let newBlog = new Blog({
+            title: req.body.title,
+            content: req.body.content,
+            links: relatedLinks,
+            image: pathName,
+        })
+        try{
+            const blog = await newBlog.save();
+            sendResponse(200, "Successful", blog, req, res);
+    
+        }catch(err){
+            return sendError(new AppError(400, "Unsuccessful", "Internal Error"), req, res);
+        }
     }
+    else{
+        return sendError(new AppError(400, "Unsuccessful", "Invaild Input"), req, res);
+    }
+ 
+
 }
 
 const deleteBlog = async(req, res, next) =>{
