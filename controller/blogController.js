@@ -27,7 +27,6 @@ const getBlogById = async (req, res, next)=>{
 const createBlog = async (req, res, next)=>{
     let pathName = path.join(__dirname,"..",req.file.path);
     let relatedLinks = req.body.links.split(",");
-    // console.log(relatedLinks);
     let newBlog = new Blog({
         title: req.body.title,
         content: req.body.content,
