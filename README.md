@@ -17,8 +17,11 @@ Here, the api endpoint is designed in a way that the user can find a particular 
 Here, the user can create a new blog. The structure of the blog is fixed and it contains: Blog Title, Blog content, Related links, Blog Banner Image. Here, multer is used for uploading the files as well as the image and hence the data is sent using 'form-data' of postman. The sample example for creating a blog is as follows: 
 
 title: Some Title
+
 content: Some related content to the title
+
 links: link1, link2, link3...(links here is an array. So any number of related links can be provided by the user).
+
 image: (The image has to be choosen from the local machine of the user).
 
 Any other model other than the one given in the example will be considered as invalid input.
