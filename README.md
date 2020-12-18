@@ -24,7 +24,7 @@ links: link1, link2, link3...(links here is an array. So any number of related l
 
 image: (The image has to be choosen from the local machine of the user).
 
-Any other model other than the one given in the example will be considered as invalid input.
+Any extra fields other than the one given in the example will be considered as invalid input.
 
 The url for the same is: http://localhost:3000/blogs. 
 
