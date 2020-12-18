@@ -35,3 +35,7 @@ A particular blog can be deleted by passing its Id as an route parameter. The ur
 # Hosting:
 
 The application is hosted on heroku and the live link for the same is given below: 
+
+https://blog-backend-image.herokuapp.com/blogs
+
+
