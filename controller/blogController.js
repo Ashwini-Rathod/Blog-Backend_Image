@@ -1,32 +1,59 @@
-//mongoose schema
-const uniqid = require("uniqid");
-const mongoose = require("mongoose");
-const blogSchema = new mongoose.Schema({
-    id:{
-        type: String,
-        default: uniqid(),
-    },
-    author:{
-        type: String,
-        required: [true, "Please enter author name"],
-    },
-    title:{
-        type: String,
-        required: [true, "Please enter the title"],
-    },
-    content:{
-        type: String,
-        required: [true, "Please enter the content"],
-    },
-    relatedLinks:[{
-        links: {
-            type: String,
-        },
-        title: {
-            type: String,
-        }
-    }]
-})
+const Blog = require("../model/blogSchema");
+const AppError = require("../helpers/appError");
+const sendError = require("../helpers/sendError");
+const sendResponse = require("../helpers/sendResponse");
+const path = require("path");
 
-const Blog = mongoose.model("Blog", blogSchema);
-module.exports = Blog;
+const getAllBlogs = async (req, res, next)=>{
+    try{
+        let blogs = await Blog.find();
+        sendResponse(200, "Successful", blogs, req, res);     
+    }catch(err){
+        console.log(err);
+        return sendError(new AppError(400, "Unsuccessful", "Internal Error"), req, res);
+    }
+}
+
+const getBlogById = async (req, res, next)=>{
+    try{
+        let blog = await Blog.find({id: req.params.id});
+        sendResponse(200, "Successful", blog, req, res);
+    }
+    catch(err){
+        return sendError(new AppError(400, "Unsuccessful", "Internal Error"), req, res); 
+    }
+}
+
+const createBlog = async (req, res, next)=>{
+    let pathName = path.join(__dirname,"..",req.file.path);
+    let relatedLinks = req.body.links.split(",");
+    // console.log(relatedLinks);
+    let newBlog = new Blog({
+        title: req.body.title,
+        content: req.body.content,
+        links: relatedLinks,
+        image: pathName,
+    })
+    try{
+        const blog = await newBlog.save();
+        sendResponse(200, "Successful", blog, req, res);
+
+    }catch(err){
+        console.log(err);
+        return sendError(new AppError(400, "Unsuccessful", "Internal Error"), req, res);
+    }
+}
+
+const deleteBlog = async(req, res, next) =>{
+    try{
+        let deleteblog = await Blog.findOneAndDelete({id: req.params.id});
+        sendResponse(200, "Successful", deleteblog, req, res);
+    }catch(err){
+        return sendError(new AppError(400, "Unsuccessful", "Internal Error"), req, res);
+    }
+}
+
+module.exports.getAllBlogs = getAllBlogs;
+module.exports.getBlogById = getBlogById;
+module.exports.createBlog = createBlog;
+module.exports.deleteBlog = deleteBlog;
